@@ -17,7 +17,6 @@
     "babel-jest": "22.2.2",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.2.2",
-    "jest-teamcity-reporter": "^0.6.2",
     "react-test-renderer": "16.2.0",
     "ts-jest": "^22.0.4",
     "tslint": "^5.9.1",
@@ -46,10 +45,8 @@
     "transformIgnorePatterns": [
       "node_modules/(?!react-native|react-navigation|react-native-router-flux)"
     ],
-    "testResultsProcessor": "jest-teamcity-reporter",
     "mapCoverage": true,
     "coverageReporters": [
-      "teamcity",
       "lcov",
       "text"
     ],
