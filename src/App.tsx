@@ -32,6 +32,10 @@ export default class App extends Component<Props> {
   }
 }
 
+function test() {
+  test();
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
