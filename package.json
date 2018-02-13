@@ -1,0 +1,63 @@
+{
+  "name": "ReadingTracker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "tsc -w & node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.2.0",
+    "react-native": "0.53.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.1.2",
+    "@types/react": "^16.0.36",
+    "@types/react-native": "0.52.9",
+    "babel-jest": "22.2.2",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "22.2.2",
+    "jest-teamcity-reporter": "^0.6.2",
+    "react-test-renderer": "16.2.0",
+    "ts-jest": "^22.0.4",
+    "tslint": "^5.9.1",
+    "tslint-config-airbnb": "^5.6.0",
+    "tslint-react": "^3.5.1",
+    "typescript": "^2.7.1"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
+    "testPathIgnorePatterns": [
+      "testDoubles",
+      "node_modules"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation|react-native-router-flux)"
+    ],
+    "testResultsProcessor": "jest-teamcity-reporter",
+    "mapCoverage": true,
+    "coverageReporters": [
+      "teamcity",
+      "lcov",
+      "text"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "(.*.d.ts)"
+    ]
+  }
+}
