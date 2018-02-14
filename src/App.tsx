@@ -3,8 +3,22 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
+
+import { Navigation } from 'react-native-navigation';
+
+export const start = () => {
+  Navigation.registerComponent(`App`, () => App);
+
+  Navigation.events().onAppLaunched(() => {
+    Navigation.setRoot({
+      component: {
+        name: 'App',
+      },
+    });
+  });
+};
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -14,7 +28,7 @@ const instructions = Platform.select({
 });
 
 type Props = {};
-export default class App extends Component<Props> {
+class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>

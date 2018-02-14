@@ -1,4 +1,3 @@
-import { AppRegistry } from 'react-native';
-import App from './output/App';
+import { start } from './output/App';
 
-AppRegistry.registerComponent('ReadingTracker', () => App);
+start();
