@@ -1,4 +1,4 @@
-import React, { Component, ComponentClass } from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -6,54 +6,16 @@ import {
   Button,
   FlatList,
   ListRenderItemInfo,
-  ComponentProvider,
 } from 'react-native';
 import {
   BookPresenter,
   BookPresenterInput,
-  BookPresenterViewModel, Presenter,
-  PresenterOutput,
+  BookPresenterViewModel,
 } from './BookPresenter';
+import { Actions, connect } from '../Presenter/connect';
 
-///
-const connect = <P extends Presenter<VM>, I, VM>
-(presenter: P,
- initialState: VM,
- component: ComponentClass<Actions<I> & VM>,
- mapPresenterToActions: (presenter: P) => Actions<I>,
-): ComponentProvider => {
-  class PresenterProvider extends Component implements PresenterOutput<VM> {
-    private readonly presenter: P;
+export class BookScreen extends Component<Actions<BookPresenterInput> & BookPresenterViewModel> {
 
-    state: VM = initialState;
-
-    constructor(props: any) {
-      super(props);
-
-      this.presenter = presenter;
-      presenter.setOutput(this);
-    }
-
-    renderOutput(viewModel: Partial<VM>): void {
-      this.setState(viewModel);
-    }
-
-    render() {
-      const actions = mapPresenterToActions(this.presenter);
-      const props = { ...actions, ...this.state as any };
-      return React.createElement(component, props);
-    }
-  }
-
-  return () => PresenterProvider;
-};
-interface Actions<T> {
-  actions: T;
-}
-///
-
-export class BookScreen extends
-  Component<Actions<BookPresenterInput> & BookPresenterViewModel> {
   keyExtractor = (item: any) => String(item);
 
   render() {
@@ -63,7 +25,7 @@ export class BookScreen extends
         <View style={styles.listContainer}>
           <FlatList
             style={styles.list}
-            data={[1, 2, 3, 4, 5]}
+            data={this.props.progress}
             renderItem={ListItem}
             keyExtractor={this.keyExtractor}
           />
@@ -80,23 +42,9 @@ export class BookScreen extends
   }
 }
 
-//
-const mapPresenterToActions = (presenter: BookPresenter): Actions<BookPresenterInput> => ({
-  actions: {
-    addProgress: presenter.addProgress,
-  },
-});
-const initialState: BookPresenterViewModel = {
-  progress: [],
-};
-
-export const connectedComponent = connect<BookPresenter, BookPresenterInput, BookPresenterViewModel>
-  (new BookPresenter(), initialState, BookScreen, mapPresenterToActions);
-//
-
 const ListItem = (item: ListRenderItemInfo<any>) => (
   <View style={styles.listItem} key={item.index}>
-    <Text>{`Text - ${item.item}`}</Text>
+    <Text>{`Text – ${item.item}`}</Text>
   </View>
 );
 
@@ -140,3 +88,15 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
+
+const mapPresenterToActions = (presenter: BookPresenter): Actions<BookPresenterInput> => ({
+  actions: {
+    addProgress: presenter.addProgress,
+  },
+});
+const initialState: BookPresenterViewModel = {
+  progress: [],
+};
+
+export const connectedComponent = connect<BookPresenter, BookPresenterInput, BookPresenterViewModel>
+(new BookPresenter(), initialState, BookScreen, mapPresenterToActions);
