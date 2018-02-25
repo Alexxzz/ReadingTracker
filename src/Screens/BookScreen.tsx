@@ -5,18 +5,18 @@ import {
   StyleSheet,
   Button,
   FlatList,
-  ListRenderItemInfo,
 } from 'react-native';
 import {
-  BookPresenter,
   BookPresenterInput,
   BookPresenterViewModel,
+  Progress,
 } from './BookPresenter';
-import { Actions, connect } from '../Presenter/connect';
+import { Actions } from '../Presenter/connect';
+import { ListItem } from './BookLogItem';
 
 export class BookScreen extends Component<Actions<BookPresenterInput> & BookPresenterViewModel> {
 
-  keyExtractor = (item: any) => String(item);
+  keyExtractor = (item: Progress) => String(item.date.getTime());
 
   render() {
     console.log('BookScreen render, props: ', this.props);
@@ -42,12 +42,6 @@ export class BookScreen extends Component<Actions<BookPresenterInput> & BookPres
   }
 }
 
-const ListItem = (item: ListRenderItemInfo<any>) => (
-  <View style={styles.listItem} key={item.index}>
-    <Text>{`Text – ${item.item}`}</Text>
-  </View>
-);
-
 type ResultProps = {
   title: string;
   value: string;
@@ -72,9 +66,6 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
   },
-  listItem: {
-    marginHorizontal: 16,
-  },
   footerContainer: {
     marginHorizontal: 16,
     marginBottom: 24,
@@ -88,15 +79,3 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
-
-const mapPresenterToActions = (presenter: BookPresenter): Actions<BookPresenterInput> => ({
-  actions: {
-    addProgress: presenter.addProgress,
-  },
-});
-const initialState: BookPresenterViewModel = {
-  progress: [],
-};
-
-export const connectedComponent = connect<BookPresenter, BookPresenterInput, BookPresenterViewModel>
-(new BookPresenter(), initialState, BookScreen, mapPresenterToActions);

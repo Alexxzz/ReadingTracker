@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation';
-import { connectedComponent } from './Screens/BookScreen';
+import { connectedComponent } from './Screens/bookScreenBuilder';
 
 export const start = () => {
   Navigation.registerComponent(`BookScreen`, connectedComponent);
