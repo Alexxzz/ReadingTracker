@@ -15,7 +15,11 @@ export type BookPresenterViewModel = {
 
 export interface BookPresenterInput {
   start(): void;
-  addProgress(page: number): void;
+  addProgress(): void;
+}
+
+export interface UserPageNumberInput {
+  promptPageNumber(): Promise<string>;
 }
 
 export type Progress = {
@@ -29,32 +33,60 @@ export class BookPresenter extends Presenter<BookPresenterViewModel> implements 
   constructor(
     private readonly dateProvider: ClockService,
     private readonly bookProgressProvider: BookProgressProvider,
-    ) {
+    private readonly userPageNumberInput: UserPageNumberInput,
+  ) {
     super();
   }
 
-  async start() {
+  start = async () => {
     try {
-      this.progress = await this.bookProgressProvider.restore();
-      if (this.progress.length) {
+      const restoredProgress = await this.bookProgressProvider.restore();
+      if (restoredProgress && restoredProgress.length) {
         this.renderToOutput({
-          progress: this.progress,
+          progress: restoredProgress,
         });
+        this.progress = restoredProgress;
       }
     } catch (e) {
-      console.error('BookPresenter bookProgressProvider error: ', e);
+      console.info('BookPresenter bookProgressProvider error: ', e);
     }
   }
 
-  addProgress(page: number): void {
-    const newProgress: Progress = {
-      page,
-      date: this.dateProvider.today(),
-    };
-    this.progress = [...this.progress, newProgress];
-    this.renderToOutput({
-      progress: this.progress,
+  addProgress = async () => {
+    try {
+      const page = await this.userPageNumberInput.promptPageNumber();
+
+      const pageNumber = Number(page);
+      if (!pageNumber) return;
+
+      const newProgress: Progress = {
+        page: pageNumber,
+        date: this.dateProvider.today(),
+      };
+      this.addOrUpdateProgress(newProgress);
+      this.renderToOutput({
+        progress: this.progress,
+      });
+      this.bookProgressProvider.store(this.progress);
+    } catch (e) {
+      console.log('BookPresenter userPageNumberInput.promptPageNumber error: ', e);
+    }
+  }
+
+  private addOrUpdateProgress(newProgress: Progress) {
+    if (this.progress.length === 0) {
+      this.progress = [newProgress];
+      return;
+    }
+    this.progress = this.progress.map((progress) => {
+      if (
+        progress.date.getUTCFullYear() === newProgress.date.getUTCFullYear() &&
+        progress.date.getUTCMonth() === newProgress.date.getUTCMonth() &&
+        progress.date.getUTCDay() === newProgress.date.getUTCDay()
+      ) {
+        return newProgress;
+      }
+      return progress;
     });
-    this.bookProgressProvider.store(this.progress);
   }
 }

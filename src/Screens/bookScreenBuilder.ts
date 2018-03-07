@@ -6,6 +6,7 @@ import { dependencies } from '../Services/Assembly';
 const presenter = new BookPresenter(
   dependencies.dateProvider,
   dependencies.progressStorageProvider,
+  dependencies.userPageNumberInput,
 );
 
 const mapPresenterToActions = (presenter: BookPresenter): Actions<BookPresenterInput> => ({
@@ -19,5 +20,8 @@ const initialState: BookPresenterViewModel = {
   progress: [],
 };
 
-export const connectedComponent = connect<BookPresenter, BookPresenterInput, BookPresenterViewModel>
-  (presenter, initialState, BookScreen, mapPresenterToActions);
+export const connectedComponent = connect<
+  BookPresenter,
+  BookPresenterInput,
+  BookPresenterViewModel
+>(presenter, initialState, BookScreen, mapPresenterToActions);

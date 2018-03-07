@@ -18,6 +18,10 @@ export class BookScreen extends Component<Actions<BookPresenterInput> & BookPres
 
   keyExtractor = (item: Progress) => String(item.date.getTime());
 
+  componentWillMount() {
+    this.props.actions.start();
+  }
+
   render() {
     console.log('BookScreen render, props: ', this.props);
     return (
@@ -31,7 +35,7 @@ export class BookScreen extends Component<Actions<BookPresenterInput> & BookPres
           />
         </View>
         <View style={styles.footerContainer}>
-          <Button title={'Add'} onPress={() => this.props.actions.addProgress(Date.now())}/>
+          <Button title={'Add'} onPress={() => this.props.actions.addProgress()}/>
           <View>
             <ResultText title={'Pages read:'} value={'x(y%)'} />
             <ResultText title={'Pages left:'} value={'z(zz%)'} />
