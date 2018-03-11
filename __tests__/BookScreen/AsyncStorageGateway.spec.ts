@@ -1,6 +1,6 @@
 import {
-  AsyncStorageBookProgressProvider,
-} from '../../src/Services/AsyncStorageBookProgressProvider';
+  AsyncStorageGateway,
+} from '../../src/Services/AsyncStorageGateway';
 import { AsyncStorage } from 'react-native';
 
 class AsyncStorageStub implements AsyncStorage {
@@ -20,10 +20,10 @@ class AsyncStorageStub implements AsyncStorage {
 describe('Progress storage', () => {
   const asyncStorageStub = new AsyncStorageStub();
   const date1 = new Date('2018-02-25T18:17:14.593Z');
-  const date2 = new Date('2018-02-25T18:17:14.593Z');
+  const date2 = new Date('2018-03-25T15:17:14.593Z');
 
   it('stores progress to async storage', () => {
-    const sut = new AsyncStorageBookProgressProvider(asyncStorageStub);
+    const sut = new AsyncStorageGateway(asyncStorageStub);
 
     sut.store([{
       page: 3,
@@ -36,15 +36,15 @@ describe('Progress storage', () => {
     expect(asyncStorageStub.setItem).toBeCalledWith(
       'BookProgressKey',
       '[{"page":3,"date":"2018-02-25T18:17:14.593Z"},' +
-      '{"page":15,"date":"2018-02-25T18:17:14.593Z"}]',
+      '{"page":15,"date":"2018-03-25T15:17:14.593Z"}]',
     );
   });
 
   it('restores progress from async storage', async () => {
-    const sut = new AsyncStorageBookProgressProvider(asyncStorageStub);
+    const sut = new AsyncStorageGateway(asyncStorageStub);
     asyncStorageStub.getItem.mockReturnValue(Promise.resolve(
       '[{"page":3,"date":"2018-02-25T18:17:14.593Z"},' +
-      '{"page":15,"date":"2018-02-25T18:17:14.593Z"}]',
+      '{"page":15,"date":"2018-03-25T15:17:14.593Z"}]',
     ));
 
     const res = await sut.restore();

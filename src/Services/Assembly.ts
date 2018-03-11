@@ -1,17 +1,19 @@
 import { AsyncStorage } from 'react-native';
-import { BookProgressProvider, ClockService, UserPageNumberInput } from '../Screens/BookPresenter';
+import { UserPageNumberInput } from '../Screens/UserPageNumberInput';
 import { ClockServiceImpl } from './ClockService';
-import { AsyncStorageBookProgressProvider } from './AsyncStorageBookProgressProvider';
+import { AsyncStorageGateway } from './AsyncStorageGateway';
 import { AlertUserPageNumberInput } from './AlertUserPageNumberInput';
+import { Gateway } from './Gateway';
+import { ClockService } from '../Screens/ClockService';
 
 export type Dependencies = {
   dateProvider: ClockService;
-  progressStorageProvider: BookProgressProvider;
+  progressStorageProvider: Gateway;
   userPageNumberInput: UserPageNumberInput;
 };
 
 export const dependencies: Dependencies = {
   dateProvider: new ClockServiceImpl(),
-  progressStorageProvider: new AsyncStorageBookProgressProvider(AsyncStorage),
+  progressStorageProvider: new AsyncStorageGateway(AsyncStorage),
   userPageNumberInput: new AlertUserPageNumberInput(),
 };

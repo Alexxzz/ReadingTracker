@@ -1,17 +1,31 @@
 import React from 'react';
 import { ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
-import { Progress } from './BookPresenter';
+import { ProgressViewModel } from './BookPresenter';
 
-export const ListItem = (item: ListRenderItemInfo<Progress>) => (
+export const ListItem = (item: ListRenderItemInfo<ProgressViewModel>) => (
   <View style={styles.listItem} key={item.index}>
-    <Text>{`Day 1 - ${item.item.date.toDateString()}`}</Text>
-    <Text>{`To page ${item.item.page}`}</Text>
+    <View style={styles.leftContainer}>
+      <Text>{item.item.dayAndDate}</Text>
+      <Text>{item.item.fromPage}</Text>
+      <Text>{item.item.toPage}</Text>
+    </View>
+    <View style={styles.rightContainer}>
+      <Text>{item.item.pagesRead}</Text>
+    </View>
   </View>
 );
 
 const styles = StyleSheet.create({
   listItem: {
+    flexDirection: 'row',
     minHeight: 44,
     marginHorizontal: 16,
+    paddingVertical: 5,
+  },
+  leftContainer: {
+    flex: 1,
+  },
+  rightContainer: {
+    justifyContent: 'center',
   },
 });

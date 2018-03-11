@@ -1,5 +1,5 @@
 import { AlertIOS, AlertIOSButton } from 'react-native';
-import { UserPageNumberInput } from '../Screens/BookPresenter';
+import { UserPageNumberInput } from '../Screens/UserPageNumberInput';
 
 export class AlertUserPageNumberInput implements UserPageNumberInput {
   promptPageNumber(): Promise<string> {

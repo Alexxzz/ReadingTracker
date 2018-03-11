@@ -1,5 +1,6 @@
-import { BookProgressProvider, Progress } from '../Screens/BookPresenter';
+import { Progress } from '../Screens/BookPresenter';
 import { AsyncStorage } from 'react-native';
+import { Gateway } from './Gateway';
 
 const BookProgressKey = 'BookProgressKey';
 
@@ -8,7 +9,7 @@ const reviver = (key: string, value: any) => {
   return value;
 };
 
-export class AsyncStorageBookProgressProvider implements BookProgressProvider {
+export class AsyncStorageGateway implements Gateway {
   constructor(private readonly asyncStorage: AsyncStorage) {}
 
   store(progress: Progress[]): void {
@@ -20,7 +21,7 @@ export class AsyncStorageBookProgressProvider implements BookProgressProvider {
       const string = await this.asyncStorage.getItem(BookProgressKey);
       return JSON.parse(string, reviver);
     } catch (e) {
-      console.log('AsyncStorageBookProgressProvider restore error: ', e);
+      console.log('AsyncStorageGateway restore error: ', e);
       return Promise.resolve([]);
     }
   }

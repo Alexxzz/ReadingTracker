@@ -1,7 +1,8 @@
 export abstract class Presenter<T> {
-  private output: PresenterOutput<T>;
+  private output?: PresenterOutput<T>;
 
   renderToOutput(viewModel: Partial<T>): void {
+    if (!this.output) throw `Output is not set!: ${this}`;
     this.output.renderOutput(viewModel);
   }
 

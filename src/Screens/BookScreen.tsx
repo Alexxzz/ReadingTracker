@@ -9,14 +9,14 @@ import {
 import {
   BookPresenterInput,
   BookPresenterViewModel,
-  Progress,
+  ProgressViewModel,
 } from './BookPresenter';
 import { Actions } from '../Presenter/connect';
 import { ListItem } from './BookLogItem';
 
 export class BookScreen extends Component<Actions<BookPresenterInput> & BookPresenterViewModel> {
 
-  keyExtractor = (item: Progress) => String(item.date.getTime());
+  keyExtractor = (item: ProgressViewModel) => item.dayAndDate;
 
   componentWillMount() {
     this.props.actions.start();

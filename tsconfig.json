@@ -22,7 +22,8 @@
     "noUnusedParameters": true,
     "alwaysStrict": true,
     "strictFunctionTypes": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "strict": true
   },
   "types": [
     "react",
