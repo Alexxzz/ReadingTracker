@@ -1,11 +1,11 @@
 import {
   BookPresenter,
   BookPresenterViewModel,
-  } from '../../src/Screens/BookPresenter';
+  } from '../../src/Screens/Book/BookPresenter';
 import { PresenterOutput } from '../../src/Presenter/Presenter';
 import { Gateway } from '../../src/Services/Gateway';
-import { ClockService } from '../../src/Screens/ClockService';
-import { UserPageNumberInput } from '../../src/Screens/UserPageNumberInput';
+import { ClockService } from '../../src/Services/ClockService';
+import { UserPageNumberInput } from '../../src/Services/UserPageNumberInput';
 
 class ClockServiceStub implements ClockService {
   todayStub: Date = new Date();

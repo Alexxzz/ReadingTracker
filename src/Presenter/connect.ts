@@ -1,4 +1,4 @@
-import React, { Component, ComponentClass } from 'react';
+import React, { Component, ComponentType } from 'react';
 import { ComponentProvider } from 'react-native';
 import { Presenter, PresenterOutput } from './Presenter';
 
@@ -9,7 +9,7 @@ export interface Actions<T> {
 export const connect = <P extends Presenter<VM>, I, VM>
 (presenter: P,
  initialState: VM,
- component: ComponentClass<Actions<I> & VM>,
+ component: ComponentType<Actions<I> & VM>,
  mapPresenterToActions: (presenter: P) => Actions<I>,
 ): ComponentProvider => {
   class PresenterProvider extends Component implements PresenterOutput<VM> {

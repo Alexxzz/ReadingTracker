@@ -1,4 +1,4 @@
-import { Progress } from '../Screens/BookPresenter';
+import { Progress } from '../Screens/Book/BookPresenter';
 import { AsyncStorage } from 'react-native';
 import { Gateway } from './Gateway';
 

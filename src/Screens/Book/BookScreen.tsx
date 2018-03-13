@@ -11,7 +11,7 @@ import {
   BookPresenterViewModel,
   ProgressViewModel,
 } from './BookPresenter';
-import { Actions } from '../Presenter/connect';
+import { Actions } from '../../Presenter/connect';
 import { ListItem } from './BookLogItem';
 
 export class BookScreen extends Component<Actions<BookPresenterInput> & BookPresenterViewModel> {

@@ -1,12 +1,15 @@
 import { BookPresenter, BookPresenterInput, BookPresenterViewModel } from './BookPresenter';
-import { Actions, connect } from '../Presenter/connect';
+import { Actions, connect } from '../../Presenter/connect';
 import { BookScreen } from './BookScreen';
-import { dependencies } from '../Services/Assembly';
+import { ClockServiceImpl } from '../../Services/ClockServiceImpl';
+import { AsyncStorage } from 'react-native';
+import { AsyncStorageGateway } from '../../Services/AsyncStorageGateway';
+import { AlertUserPageNumberInput } from '../../Services/AlertUserPageNumberInput';
 
 const presenter = new BookPresenter(
-  dependencies.dateProvider,
-  dependencies.progressStorageProvider,
-  dependencies.userPageNumberInput,
+  new ClockServiceImpl(),
+  new AsyncStorageGateway(AsyncStorage),
+  new AlertUserPageNumberInput(),
 );
 
 const mapPresenterToActions = (presenter: BookPresenter): Actions<BookPresenterInput> => ({
@@ -20,7 +23,7 @@ const initialState: BookPresenterViewModel = {
   progress: [],
 };
 
-export const connectedComponent = connect<
+export const BookScreenConnected = connect<
   BookPresenter,
   BookPresenterInput,
   BookPresenterViewModel

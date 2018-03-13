@@ -10,7 +10,7 @@
     "date-fns": "^1.29.0",
     "react": "16.2.0",
     "react-native": "0.53.0",
-    "react-native-navigation": "^2.0.2126"
+    "react-native-navigation": "2.0.2126"
   },
   "devDependencies": {
     "@types/jest": "^22.1.2",
