@@ -14,3 +14,12 @@ export abstract class Presenter<T> {
 export interface PresenterOutput<T> {
   renderOutput(viewModel: Partial<T>): void;
 }
+
+export const actionsKey = Symbol('actions');
+export function action(proto: any, name: string) {
+  if (proto.hasOwnProperty(actionsKey)) {
+    proto[actionsKey].push(name);
+  } else {
+    Object.defineProperty(proto, actionsKey, { value: [name] });
+  }
+}

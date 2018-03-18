@@ -1,5 +1,5 @@
 import isSameDay from 'date-fns/is_same_day';
-import { Presenter } from '../../Presenter/Presenter';
+import { action, Presenter } from '../../Presenter/Presenter';
 import { Gateway } from '../../Services/Gateway';
 import { ClockService } from '../../Services/ClockService';
 import { UserPageNumberInput } from '../../Services/UserPageNumberInput';
@@ -50,7 +50,8 @@ export class BookPresenter extends Presenter<BookPresenterViewModel> implements 
     super();
   }
 
-  start = async () => {
+  @action
+  async start() {
     try {
       const restoredProgress = await this.gateway.restore();
       if (restoredProgress && restoredProgress.length) {
@@ -64,6 +65,7 @@ export class BookPresenter extends Presenter<BookPresenterViewModel> implements 
     }
   }
 
+  @action
   addProgress = async () => {
     try {
       const page = await this.userPageNumberInput.promptPageNumber();

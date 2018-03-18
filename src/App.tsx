@@ -3,8 +3,8 @@ import { BookScreenConnected } from './Screens/Book/bookScreenBuilder';
 import { MainScreenConnected } from './Screens/Main/mainScreenBuilder';
 
 export const start = () => {
-  Navigation.registerComponent(`BookScreen`, BookScreenConnected);
   Navigation.registerComponent(`MainScreen`, MainScreenConnected);
+  Navigation.registerComponent(`BookScreen`, BookScreenConnected);
 
   Navigation.events().onAppLaunched(() => {
     Navigation.setRoot({
