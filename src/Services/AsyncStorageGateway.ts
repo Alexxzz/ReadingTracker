@@ -1,8 +1,8 @@
-import { Progress } from '../Screens/Book/BookPresenter';
 import { AsyncStorage } from 'react-native';
-import { Gateway } from './Gateway';
+import { Gateway } from '../Screens/Book/Gateway';
+import { Book } from '../Screens/Main/Book';
 
-const BookProgressKey = 'BookProgressKey';
+const BookProgressKey = 'BooksKey';
 
 const reviver = (key: string, value: any) => {
   if (key === 'date') return new Date(value);
@@ -12,17 +12,29 @@ const reviver = (key: string, value: any) => {
 export class AsyncStorageGateway implements Gateway {
   constructor(private readonly asyncStorage: AsyncStorage) {}
 
-  store(progress: Progress[]): void {
-    this.asyncStorage.setItem(BookProgressKey, JSON.stringify(progress));
-  }
-
-  async restore(): Promise<Progress[]> {
+  async getAllBooks(): Promise<Book[]> {
     try {
       const string = await this.asyncStorage.getItem(BookProgressKey);
       return JSON.parse(string, reviver);
     } catch (e) {
       console.log('AsyncStorageGateway restore error: ', e);
       return Promise.resolve([]);
+    }
+  }
+
+  async store(book: Book): Promise<void> {
+    try {
+      let storedBooks = await this.getAllBooks();
+      if (!storedBooks) storedBooks = [];
+
+      storedBooks = [
+        ...storedBooks,
+        book,
+      ];
+      this.asyncStorage.setItem(BookProgressKey, JSON.stringify(storedBooks));
+    } catch (e) {
+      console.log('AsyncStorageGateway store error: ', e);
+      console.log('   book: ', book);
     }
   }
 }

@@ -1,10 +1,12 @@
-import { BookPresenter, BookPresenterInput, BookPresenterViewModel } from './BookPresenter';
+import { BookPresenter } from './BookPresenter';
 import { connect } from '../../Presenter/connect';
 import { BookScreen } from './BookScreen';
 import { ClockServiceImpl } from '../../Services/ClockServiceImpl';
 import { AsyncStorage } from 'react-native';
 import { AsyncStorageGateway } from '../../Services/AsyncStorageGateway';
 import { AlertUserPageNumberInput } from '../../Services/AlertUserPageNumberInput';
+import { BookPresenterViewModel } from './BookPresenterViewModel';
+import { BookPresenterInput } from './BookPresenterInput';
 
 const presenter = new BookPresenter(
   new ClockServiceImpl(),

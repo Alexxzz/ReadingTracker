@@ -8,22 +8,25 @@ import {
 } from 'react-native';
 import {
   BookPresenterInput,
-  BookPresenterViewModel,
-  ProgressViewModel,
-} from './BookPresenter';
+  } from './BookPresenterInput';
 import { Actions } from '../../Presenter/connect';
 import { ListItem } from './BookLogItem';
+import { BookPresenterViewModel } from './BookPresenterViewModel';
+import { ProgressViewModel } from './ProgressViewModel';
 
 export class BookScreen extends Component<Actions<BookPresenterInput> & BookPresenterViewModel> {
 
   keyExtractor = (item: ProgressViewModel) => item.dayAndDate;
 
   componentWillMount() {
-    this.props.actions.start();
+    this.props.actions.start({
+      name: '',
+      progress: [],
+    });
   }
 
   render() {
-    console.log('BookScreen render, props: ', this.props);
+    // console.log('BookScreen render, props: ', this.props);
     return (
       <View style={styles.container}>
         <View style={styles.listContainer}>

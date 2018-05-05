@@ -5,6 +5,8 @@ declare module 'react-native-navigation' {
     registerComponent(componentName: string, getComponentClassFunc: ComponentProvider): void;
     setRoot(params: any): any;
     events(): any;
+
+    push(componentId: any, component: any): any;
   }
 
   // export default NavigationClass;

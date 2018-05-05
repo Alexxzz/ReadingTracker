@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
-import { ProgressViewModel } from './BookPresenter';
+import { ProgressViewModel } from './ProgressViewModel';
 
 export const ListItem = (item: ListRenderItemInfo<ProgressViewModel>) => (
   <View style={styles.listItem} key={item.index}>

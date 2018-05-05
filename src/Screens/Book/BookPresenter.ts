@@ -1,30 +1,13 @@
 import isSameDay from 'date-fns/is_same_day';
 import { action, Presenter } from '../../Presenter/Presenter';
-import { Gateway } from '../../Services/Gateway';
+import { Gateway } from './Gateway';
 import { ClockService } from '../../Services/ClockService';
 import { UserPageNumberInput } from '../../Services/UserPageNumberInput';
-
-export type Progress = {
-  page: number;
-  date: Date;
-};
-
-export type ProgressViewModel = {
-  dayAndDate: string;
-  fromPage: string;
-  toPage: string;
-  pagesRead: string;
-};
-
-// Input/VM
-export interface BookPresenterInput {
-  start(): void;
-  addProgress(): void;
-}
-
-export type BookPresenterViewModel = {
-  progress: ProgressViewModel[];
-};
+import { BookPresenterViewModel } from './BookPresenterViewModel';
+import { ProgressViewModel } from './ProgressViewModel';
+import { BookPresenterInput } from './BookPresenterInput';
+import { Progress } from './Progress';
+import { Book, NullBook } from '../Main/Book';
 
 const mapProgressToVM =
   (progress: Progress, index: number, array: ReadonlyArray<Progress>): ProgressViewModel => {
@@ -40,7 +23,7 @@ const mapProgressToVM =
   };
 
 export class BookPresenter extends Presenter<BookPresenterViewModel> implements BookPresenterInput {
-  private progress: ReadonlyArray<Progress> = [];
+  private book: Book = NullBook;
 
   constructor(
     private readonly dateProvider: ClockService,
@@ -51,18 +34,14 @@ export class BookPresenter extends Presenter<BookPresenterViewModel> implements 
   }
 
   @action
-  async start() {
-    try {
-      const restoredProgress = await this.gateway.restore();
-      if (restoredProgress && restoredProgress.length) {
-        this.renderToOutput({
-          progress: restoredProgress.map(mapProgressToVM),
-        });
-        this.progress = restoredProgress;
-      }
-    } catch (e) {
-      console.info('BookPresenter gateway error: ', e);
-    }
+  start(book: Book) {
+    this.book = book;
+
+    if (book.progress.length === 0) return;
+
+    this.renderToOutput({
+      progress: book.progress.map(mapProgressToVM),
+    });
   }
 
   @action
@@ -80,32 +59,32 @@ export class BookPresenter extends Presenter<BookPresenterViewModel> implements 
       this.addOrUpdateProgress(newProgress);
 
       this.renderToOutput({
-        progress: this.progress.map(mapProgressToVM),
+        progress: this.book.progress.map(mapProgressToVM),
       });
 
-      this.gateway.store([...this.progress]);
+      this.gateway.store(this.book);
     } catch (e) {
       console.log('BookPresenter userPageNumberInput.promptPageNumber error: ', e);
     }
   }
 
   private addOrUpdateProgress(newProgress: Progress) {
-    if (this.progress.length === 0) {
-      this.progress = [newProgress];
+    if (this.book.progress.length === 0) {
+      this.book.progress = [newProgress];
       return;
     }
 
-    const sameDayIdx = this.progress.findIndex(p => isSameDay(p.date, newProgress.date));
+    const sameDayIdx = this.book.progress.findIndex(p => isSameDay(p.date, newProgress.date));
 
     if (sameDayIdx >= 0) {
-      this.progress = [
-        ...this.progress.slice(0, sameDayIdx),
+      this.book.progress = [
+        ...this.book.progress.slice(0, sameDayIdx),
         newProgress,
-        ...this.progress.slice(sameDayIdx + 1, this.progress.length),
+        ...this.book.progress.slice(sameDayIdx + 1, this.book.progress.length),
       ];
       return;
     }
 
-    this.progress = [...this.progress, newProgress];
+    this.book.progress = [...this.book.progress, newProgress];
   }
 }

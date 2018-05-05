@@ -1,15 +1,23 @@
 import { MainScreen } from './MainScreen';
 import { connect } from '../../Presenter/connect';
-import { MainPresenter, MainPresenterInput, MainPresenterViewModel } from './MainPresenter';
+import { MainPresenter } from './MainPresenter';
+import { AsyncStorageGateway } from '../../Services/AsyncStorageGateway';
+import { AsyncStorage } from 'react-native';
+import { MainPresenterInput } from './MainPresenterInput';
+import { MainPresenterViewModel } from './MainPresenterViewModel';
+import { ReactNativeNavigationService } from '../../Services/ReactNativeNavigationService';
 
-const presenter = new MainPresenter();
+const presenter = new MainPresenter(
+  new AsyncStorageGateway(AsyncStorage),
+  new ReactNativeNavigationService(),
+);
 
 const initialState: MainPresenterViewModel = {
-
+  books: [],
 };
 
 export const MainScreenConnected = connect<
   MainPresenter,
   MainPresenterInput,
   MainPresenterViewModel
-  >(presenter, initialState, MainScreen);
+>(presenter, initialState, MainScreen);

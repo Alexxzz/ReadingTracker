@@ -1281,7 +1281,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 434ET33U2X;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-navigation/lib/ios/**",
@@ -1295,7 +1295,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.agilexs.apps.TEST;
 				PRODUCT_NAME = ReadingList;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "c4834a89-456c-4c31-aa63-950f4031918e";
+				PROVISIONING_PROFILE_SPECIFIER = Development;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1306,7 +1307,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 434ET33U2X;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-navigation/lib/ios/**",
@@ -1320,7 +1321,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.agilexs.apps.TEST;
 				PRODUCT_NAME = ReadingList;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "c4834a89-456c-4c31-aa63-950f4031918e";
+				PROVISIONING_PROFILE_SPECIFIER = Development;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

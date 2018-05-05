@@ -2,24 +2,49 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  StyleSheet,
-  FlatList,
-  ListRenderItemInfo,
   Button,
+  FlatList,
   ViewStyle,
   TextStyle,
+  StyleSheet,
+  ListRenderItemInfo,
   TouchableHighlight,
 } from 'react-native';
 import { Actions } from '../../Presenter/connect';
-import { MainPresenterInput, MainPresenterViewModel } from './MainPresenter';
+import { MainPresenterViewModel } from './MainPresenterViewModel';
+import { MainPresenterInput } from './MainPresenterInput';
+import { BookViewModel } from './BookViewModel';
 
 type Props = Actions<MainPresenterInput> & MainPresenterViewModel;
 
 export class MainScreen extends Component<Props> {
-  keyExtractor = (item: number, index: number) => String(item + index);
+  private keyExtractor = (item: number, index: number) => String(item + index);
+
+  private renderItemCell = (info: ListRenderItemInfo<BookViewModel>) => (
+    <TouchableHighlight
+      underlayColor={'#e7e7e7'}
+      onPress={() => this.props.actions.selectBookAtIndex(info.index)}
+    >
+      <View style={styles.itemContainer}>
+        <View style={styles.bookNameContainer}>
+          <Text>{info.item.name}</Text>
+        </View>
+        <View style={styles.percentContainer}>
+          <Text>{info.item.progress}</Text>
+        </View>
+        <View>
+          <Text>></Text>
+        </View>
+      </View>
+    </TouchableHighlight>
+  );
+
+  componentWillMount() {
+    this.props.actions.start();
+  }
 
   render() {
-    console.log('this.props.actions: ', this.props.actions);
+    console.log('this.props: ', this.props);
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -28,35 +53,19 @@ export class MainScreen extends Component<Props> {
 
         <View style={styles.listContainer}>
           <FlatList
-            data={[1, 2, 3]}
-            renderItem={renderItemCell}
+            data={this.props.books}
+            renderItem={this.renderItemCell}
             keyExtractor={this.keyExtractor}
           />
         </View>
 
         <View style={styles.addBookContainer}>
-          <Button title={'Add book'} onPress={this.props.actions.addBook}/>
+          <Button title={'Add book'} onPress={() => this.props.actions.addBook('test')}/>
         </View>
       </View>
     );
   }
 }
-
-const renderItemCell = (_info: ListRenderItemInfo<number>) => (
-  <TouchableHighlight underlayColor={'#e7e7e7'} onPress={() => {}}>
-    <View style={styles.itemContainer}>
-      <View style={styles.bookNameContainer}>
-        <Text>Book Name</Text>
-      </View>
-      <View style={styles.percentContainer}>
-        <Text>Percent</Text>
-      </View>
-      <View>
-        <Text>></Text>
-      </View>
-    </View>
-  </TouchableHighlight>
-);
 
 const view = (viewStyle: ViewStyle) => viewStyle;
 const text = (textStyle: TextStyle) => textStyle;
