@@ -6,10 +6,11 @@ import { AsyncStorage } from 'react-native';
 import { MainPresenterInput } from './MainPresenterInput';
 import { MainPresenterViewModel } from './MainPresenterViewModel';
 import { ReactNativeNavigationService } from '../../Services/ReactNativeNavigationService';
+import { NavigationProps, Navigation } from 'react-native-navigation';
 
 const presenter = new MainPresenter(
   new AsyncStorageGateway(AsyncStorage),
-  new ReactNativeNavigationService(),
+  new ReactNativeNavigationService(Navigation),
 );
 
 const initialState: MainPresenterViewModel = {
@@ -19,5 +20,6 @@ const initialState: MainPresenterViewModel = {
 export const MainScreenConnected = connect<
   MainPresenter,
   MainPresenterInput,
-  MainPresenterViewModel
+  MainPresenterViewModel,
+  NavigationProps
 >(presenter, initialState, MainScreen);

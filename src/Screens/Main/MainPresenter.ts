@@ -41,8 +41,9 @@ export class MainPresenter extends Presenter<MainPresenterViewModel> implements 
   }
 
   @action
-  selectBookAtIndex(_index: number) {
-    this.navigationService.showBookScreen('1');
+  selectBookAtIndex(index: number, componentId: string) {
+    const book = this.books[index];
+    this.navigationService.showBookScreen(componentId, book);
   }
 
   private outputBooks() {
@@ -58,10 +59,6 @@ export class MainPresenter extends Presenter<MainPresenterViewModel> implements 
   }
 
   private static getLastProgressFormatted(progress: Progress[]) {
-    // return Maybe.create(progress)
-    //   .map(p => Maybe.create(p[progress.length - 1]))
-    //   .bind(p => p.map(progress => `${progress.page}%`))
-    //   .defaultTo('0%');
     return Maybe.create(progress)
       .map(p => p[p.length - 1])
       .map(p => `${p.page}%`)

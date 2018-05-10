@@ -8,9 +8,20 @@ export const start = () => {
 
   Navigation.events().onAppLaunched(() => {
     Navigation.setRoot({
-      component: {
-        name: 'MainScreen',
+      stack: {
+        options: {
+          topBar: {
+            hidden: true,
+          },
+        },
+        children: [
+          {
+            component: {
+              name: 'MainScreen',
+            },
+          },
+        ],
       },
-    });
+    }).then();
   });
 };

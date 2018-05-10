@@ -1,3 +1,5 @@
+import { Book } from '../Screens/Main/Book';
+
 export interface NavigationService {
-  showBookScreen(componentId: string): void;
+  showBookScreen(componentId: string, book: Book): void;
 }

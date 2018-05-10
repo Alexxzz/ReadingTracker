@@ -13,12 +13,25 @@ import { Actions } from '../../Presenter/connect';
 import { ListItem } from './BookLogItem';
 import { BookPresenterViewModel } from './BookPresenterViewModel';
 import { ProgressViewModel } from './ProgressViewModel';
+import { Navigation } from 'react-native-navigation/lib/dist';
+import { NavigationProps } from 'react-native-navigation';
+import { BookScreenProps } from './bookScreenBuilder';
 
-export class BookScreen extends Component<Actions<BookPresenterInput> & BookPresenterViewModel> {
+type Props = Actions<BookPresenterInput> & BookPresenterViewModel & NavigationProps & BookScreenProps;
 
+export class BookScreen extends Component<Props> {
   keyExtractor = (item: ProgressViewModel) => item.dayAndDate;
 
   componentWillMount() {
+    Navigation.setOptions(this.props.componentId, {
+      topBar: {
+        hidden: false,
+        title: this.props.book.name,
+        largeTitle: true,
+      },
+    });
+
+    console.log('BookScreen componentWillMount');
     this.props.actions.start({
       name: '',
       progress: [],
@@ -26,7 +39,7 @@ export class BookScreen extends Component<Actions<BookPresenterInput> & BookPres
   }
 
   render() {
-    // console.log('BookScreen render, props: ', this.props);
+    console.log('BookScreen render, props: ', this.props);
     return (
       <View style={styles.container}>
         <View style={styles.listContainer}>

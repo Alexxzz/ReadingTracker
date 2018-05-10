@@ -173,33 +173,35 @@ describe('MainPresenter', () => {
   });
 
   describe('when selected book in list', () => {
-    it('navigates to book details', async () => {
+    it('navigates to book details using componentId', async () => {
+      const book1 = {
+        name: 'book 11',
+        progress: [
+          {
+            page: 53,
+            date: date1,
+          },
+        ],
+      };
+      const book2 = {
+        name: 'book 21',
+        progress: [
+          {
+            page: 12,
+            date: date1,
+          },
+        ],
+      };
       const storedBooks = [
-        {
-          name: 'book 11',
-          progress: [
-            {
-              page: 53,
-              date: date1,
-            },
-          ],
-        },
-        {
-          name: 'book 21',
-          progress: [
-            {
-              page: 12,
-              date: date1,
-            },
-          ],
-        },
+        book1,
+        book2,
       ];
       gatewayStub.getAllBooks.mockReturnValue(storedBooks);
 
       await sut.start();
-      sut.selectBookAtIndex(0);
+      sut.selectBookAtIndex(1, 'componentId');
 
-      expect(navigationStub.showBookScreen).toBeCalled();
+      expect(navigationStub.showBookScreen).toBeCalledWith('componentId', book2);
     });
   });
 });

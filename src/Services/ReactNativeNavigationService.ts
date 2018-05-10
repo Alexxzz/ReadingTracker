@@ -1,12 +1,19 @@
 import { NavigationService } from './NavigationService';
-import { Navigation } from 'react-native-navigation';
+import { NavigationClass } from 'react-native-navigation';
+import { Book } from '../Screens/Main/Book';
 
 export class ReactNativeNavigationService implements NavigationService {
-  showBookScreen(componentId: string): void {
-    Navigation.push(componentId, {
+  constructor(private readonly navigator: NavigationClass) { }
+
+  showBookScreen(componentId: string, book: Book): void {
+    this.navigator.push(componentId, {
       component: {
         name: 'BookScreen',
+        passProps: {
+          book,
+        },
       },
-    });
+    }).then(a => console.log('Navigation.push next: ', a))
+      .catch(e => console.log('Navigation.push e:', e));
   }
 }

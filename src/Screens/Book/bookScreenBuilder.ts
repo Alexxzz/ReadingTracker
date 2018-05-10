@@ -7,6 +7,8 @@ import { AsyncStorageGateway } from '../../Services/AsyncStorageGateway';
 import { AlertUserPageNumberInput } from '../../Services/AlertUserPageNumberInput';
 import { BookPresenterViewModel } from './BookPresenterViewModel';
 import { BookPresenterInput } from './BookPresenterInput';
+import { Book } from '../Main/Book';
+import { NavigationProps } from "react-native-navigation";
 
 const presenter = new BookPresenter(
   new ClockServiceImpl(),
@@ -18,8 +20,13 @@ const initialState: BookPresenterViewModel = {
   progress: [],
 };
 
+export type BookScreenProps = {
+  book: Book,
+};
+
 export const BookScreenConnected = connect<
   BookPresenter,
   BookPresenterInput,
-  BookPresenterViewModel
+  BookPresenterViewModel,
+  NavigationProps & BookScreenProps
 >(presenter, initialState, BookScreen);

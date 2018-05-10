@@ -1,12 +1,16 @@
 declare module 'react-native-navigation' {
   export declare const Navigation: NavigationClass;
 
+  export type NavigationProps = {
+    componentId: string;
+  };
+
   export declare class NavigationClass {
     registerComponent(componentName: string, getComponentClassFunc: ComponentProvider): void;
-    setRoot(params: any): any;
+    setRoot(params: any): Promise<any>;
     events(): any;
 
-    push(componentId: any, component: any): any;
+    push(componentId: string, layout: any): Promise<any>;
   }
 
   // export default NavigationClass;

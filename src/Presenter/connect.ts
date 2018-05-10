@@ -6,10 +6,10 @@ export interface Actions<T> {
   actions: T;
 }
 
-export const connect = <P extends Presenter<VM>, I, VM>
+export const connect = <P extends Presenter<VM>, I, VM, C = {}>
 (presenter: P,
  initialState: VM,
- component: ComponentType<Actions<I> & VM>,
+ component: ComponentType<Actions<I> & VM & C>,
  mapPresenterToActions?: (presenter: P) => Actions<I>,
 ): ComponentProvider => {
   class PresenterProvider extends Component implements PresenterOutput<VM> {
@@ -31,7 +31,7 @@ export const connect = <P extends Presenter<VM>, I, VM>
     render() {
       const actions = mapPresenterToActions ?
         mapPresenterToActions(this.presenter) : autoMapPresenterToActions(this.presenter);
-      const props = { ...actions, ...this.state as any };
+      const props = { ...actions, ...this.state as any, ...this.props };
       return React.createElement(component, props);
     }
   }

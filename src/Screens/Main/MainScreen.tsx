@@ -14,8 +14,9 @@ import { Actions } from '../../Presenter/connect';
 import { MainPresenterViewModel } from './MainPresenterViewModel';
 import { MainPresenterInput } from './MainPresenterInput';
 import { BookViewModel } from './BookViewModel';
+import { NavigationProps } from 'react-native-navigation';
 
-type Props = Actions<MainPresenterInput> & MainPresenterViewModel;
+type Props = NavigationProps & Actions<MainPresenterInput> & MainPresenterViewModel;
 
 export class MainScreen extends Component<Props> {
   private keyExtractor = (item: number, index: number) => String(item + index);
@@ -23,7 +24,7 @@ export class MainScreen extends Component<Props> {
   private renderItemCell = (info: ListRenderItemInfo<BookViewModel>) => (
     <TouchableHighlight
       underlayColor={'#e7e7e7'}
-      onPress={() => this.props.actions.selectBookAtIndex(info.index)}
+      onPress={() => this.props.actions.selectBookAtIndex(info.index, this.props.componentId)}
     >
       <View style={styles.itemContainer}>
         <View style={styles.bookNameContainer}>
@@ -37,14 +38,13 @@ export class MainScreen extends Component<Props> {
         </View>
       </View>
     </TouchableHighlight>
-  );
+  )
 
   componentWillMount() {
     this.props.actions.start();
   }
 
   render() {
-    console.log('this.props: ', this.props);
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
