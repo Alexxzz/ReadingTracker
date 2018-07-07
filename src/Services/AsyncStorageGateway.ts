@@ -1,18 +1,23 @@
-import { AsyncStorage } from 'react-native';
-import { Gateway } from '../Screens/Book/Gateway';
-import { Book } from '../Screens/Main/Book';
+import { IGateway } from '../Screens/Book/IGateway';
+import { IBook } from '../Screens/Main/IBook';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './Types';
+import { IAsyncStorage } from './IAsyncStorage';
 
 const BookProgressKey = 'BooksKey';
 
 const reviver = (key: string, value: any) => {
-  if (key === 'date') return new Date(value);
+  if (key === 'date') {
+    return new Date(value);
+  }
   return value;
 };
 
-export class AsyncStorageGateway implements Gateway {
-  constructor(private readonly asyncStorage: AsyncStorage) {}
+@injectable()
+export class AsyncStorageGateway implements IGateway {
+  constructor(@inject(TYPES.AsyncStorage) private readonly asyncStorage: IAsyncStorage) {}
 
-  async getAllBooks(): Promise<Book[]> {
+  public async getAllBooks(): Promise<IBook[]> {
     try {
       const string = await this.asyncStorage.getItem(BookProgressKey);
       return JSON.parse(string, reviver);
@@ -22,10 +27,12 @@ export class AsyncStorageGateway implements Gateway {
     }
   }
 
-  async store(book: Book): Promise<void> {
+  public async store(book: IBook): Promise<void> {
     try {
       let storedBooks = await this.getAllBooks();
-      if (!storedBooks) storedBooks = [];
+      if (!storedBooks) {
+        storedBooks = [];
+      }
 
       storedBooks = [
         ...storedBooks,

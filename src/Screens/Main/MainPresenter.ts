@@ -1,23 +1,44 @@
 import { action, Presenter } from '../../Presenter/Presenter';
-import { Book } from './Book';
-import { MainPresenterInput } from './MainPresenterInput';
-import { MainPresenterViewModel } from './MainPresenterViewModel';
-import { Gateway } from '../Book/Gateway';
+import { IBook } from './IBook';
+import { IMainPresenterInput } from './IMainPresenterInput';
+import { IMainPresenterViewModel } from './IMainPresenterViewModel';
+import { IGateway } from '../Book/IGateway';
 import { Progress } from '../Book/Progress';
 import { Maybe } from '../../Utility/Maybe';
-import { NavigationService } from '../../Services/NavigationService';
+import { INavigationService } from '../../Services/INavigationService';
+import { TYPES } from '../../Services/Types';
+import { inject, injectable } from 'inversify';
 
-export class MainPresenter extends Presenter<MainPresenterViewModel> implements MainPresenterInput {
-  private books: ReadonlyArray<Book> = [];
+export interface INewBook {
+  name: string;
+  totalPages: number;
+}
+
+export interface INewBookUserInput {
+  promptUser(): Promise<INewBook>;
+}
+
+@injectable()
+export class MainPresenter extends Presenter<IMainPresenterViewModel> implements IMainPresenterInput {
+  private static getLastProgressFormatted(progress: Progress[]) {
+    return Maybe.create(progress)
+      .map(p => p[p.length - 1])
+      .map(p => `${p.page}%`)
+      .defaultTo('0%');
+  }
+
+  private books: ReadonlyArray<IBook> = [];
 
   constructor(
-    private readonly gateway: Gateway,
-    private readonly navigationService: NavigationService) {
+    @inject(TYPES.Gateway) private readonly gateway: IGateway,
+    @inject(TYPES.NavigationService) private readonly navigationService: INavigationService,
+    @inject(TYPES.NewBookUserInput) private readonly userInput: INewBookUserInput,
+  ) {
     super();
   }
 
   @action
-  async start(): Promise<void> {
+  public async start() {
     this.books = Maybe
       .create(await this.gateway.getAllBooks())
       .defaultTo([]);
@@ -25,43 +46,46 @@ export class MainPresenter extends Presenter<MainPresenterViewModel> implements 
   }
 
   @action
-  addBook(name: string): void {
-    const newBook: Book = {
-      name,
-      progress: [],
-    };
-    this.books = [
-      ...this.books,
-      newBook,
-    ];
+  public async addBook() {
+    try {
+      const newBookParams = await this.userInput.promptUser();
 
-    this.outputBooks();
+      const newBook: IBook = {
+        name: newBookParams.name,
+        total: newBookParams.totalPages,
+        progress: [],
+      };
+      this.books = [
+        ...this.books,
+        newBook,
+      ];
 
-    this.gateway.store(newBook);
+      this.outputBooks();
+
+      this.gateway.store(newBook);
+    } catch (e) {
+      console.log('addBook error: ', e);
+    }
   }
 
   @action
-  selectBookAtIndex(index: number, componentId: string) {
+  public selectBookAtIndex(index: number, componentId: string) {
     const book = this.books[index];
     this.navigationService.showBookScreen(componentId, book);
   }
 
   private outputBooks() {
-    if (this.books.length === 0) return;
+    if (this.books.length === 0) {
+      return;
+    }
 
     console.log('this.books: ', this.books);
     this.renderToOutput({
       books: this.books.map(b => ({
         name: b.name,
+        total: b.total,
         progress: MainPresenter.getLastProgressFormatted(b.progress),
       })),
     });
-  }
-
-  private static getLastProgressFormatted(progress: Progress[]) {
-    return Maybe.create(progress)
-      .map(p => p[p.length - 1])
-      .map(p => `${p.page}%`)
-      .defaultTo('0%');
   }
 }

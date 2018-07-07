@@ -4,29 +4,29 @@ import { BookScreen } from './BookScreen';
 import { ClockServiceImpl } from '../../Services/ClockServiceImpl';
 import { AsyncStorage } from 'react-native';
 import { AsyncStorageGateway } from '../../Services/AsyncStorageGateway';
-import { AlertUserPageNumberInput } from '../../Services/AlertUserPageNumberInput';
+import { AlertUserInput } from '../../Services/AlertUserInput';
 import { BookPresenterViewModel } from './BookPresenterViewModel';
-import { BookPresenterInput } from './BookPresenterInput';
-import { Book } from '../Main/Book';
+import { IBookPresenterInput } from './IBookPresenterInput';
+import { IBook } from '../Main/IBook';
 import { NavigationProps } from "react-native-navigation";
 
 const presenter = new BookPresenter(
   new ClockServiceImpl(),
   new AsyncStorageGateway(AsyncStorage),
-  new AlertUserPageNumberInput(),
+  new AlertUserInput(),
 );
 
 const initialState: BookPresenterViewModel = {
   progress: [],
 };
 
-export type BookScreenProps = {
-  book: Book,
-};
+export interface IBookScreenProps {
+  book: IBook;
+}
 
 export const BookScreenConnected = connect<
   BookPresenter,
-  BookPresenterInput,
+  IBookPresenterInput,
   BookPresenterViewModel,
-  NavigationProps & BookScreenProps
+  NavigationProps & IBookScreenProps
 >(presenter, initialState, BookScreen);

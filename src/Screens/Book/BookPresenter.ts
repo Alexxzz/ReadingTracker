@@ -1,13 +1,13 @@
 import isSameDay from 'date-fns/is_same_day';
 import { action, Presenter } from '../../Presenter/Presenter';
-import { Gateway } from './Gateway';
-import { ClockService } from '../../Services/ClockService';
-import { UserPageNumberInput } from '../../Services/UserPageNumberInput';
+import { IGateway } from './IGateway';
+import { IClockService } from '../../Services/IClockService';
+import { ISingleUserInput } from '../../Services/ISingleUserInput';
 import { BookPresenterViewModel } from './BookPresenterViewModel';
 import { ProgressViewModel } from './ProgressViewModel';
-import { BookPresenterInput } from './BookPresenterInput';
+import { IBookPresenterInput } from './IBookPresenterInput';
 import { Progress } from './Progress';
-import { Book, NullBook } from '../Main/Book';
+import { IBook, NullBook } from '../Main/IBook';
 
 const mapProgressToVM =
   (progress: Progress, index: number, array: ReadonlyArray<Progress>): ProgressViewModel => {
@@ -17,27 +17,29 @@ const mapProgressToVM =
     return {
       dayAndDate: `Day ${index + 1} – ${progress.date.toDateString()}`,
       fromPage: `From page ${fromPage}`,
-      toPage: `To page ${toPage}`,
       pagesRead: `${pagesRead} pages`,
+      toPage: `To page ${toPage}`,
     };
   };
 
-export class BookPresenter extends Presenter<BookPresenterViewModel> implements BookPresenterInput {
-  private book: Book = NullBook;
+export class BookPresenter extends Presenter<BookPresenterViewModel> implements IBookPresenterInput {
+  private book: IBook = NullBook;
 
   constructor(
-    private readonly dateProvider: ClockService,
-    private readonly gateway: Gateway,
-    private readonly userPageNumberInput: UserPageNumberInput,
+    private readonly dateProvider: IClockService,
+    private readonly gateway: IGateway,
+    private readonly userPageNumberInput: ISingleUserInput,
   ) {
     super();
   }
 
   @action
-  start(book: Book) {
+  public start(book: IBook) {
     this.book = book;
 
-    if (book.progress.length === 0) return;
+    if (book.progress.length === 0) {
+      return;
+    }
 
     this.renderToOutput({
       progress: book.progress.map(mapProgressToVM),
@@ -45,16 +47,20 @@ export class BookPresenter extends Presenter<BookPresenterViewModel> implements 
   }
 
   @action
-  addProgress = async () => {
+  public addProgress = async () => {
     try {
-      const page = await this.userPageNumberInput.promptPageNumber();
+      const page = await this.userPageNumberInput.promptUser({
+        promptText: 'Please enter the page you stopped today',
+      });
 
       const pageNumber = Number(page);
-      if (!pageNumber) return;
+      if (!pageNumber) {
+        return;
+      }
 
       const newProgress: Progress = {
-        page: pageNumber,
         date: this.dateProvider.today(),
+        page: pageNumber,
       };
       this.addOrUpdateProgress(newProgress);
 

@@ -1,11 +1,17 @@
 {
-  "extends": ["tslint-react", "tslint-config-airbnb"],
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-react"],
   "rules": {
     "import-name": false,
     "no-unused-variable": true,
     "variable-name": false,
     "jsx-no-lambda": false,
-    "no-default-export": true
+    "no-default-export": true,
+    "quotemark": ["single"],
+    "ordered-imports": ["case-insensitive"],
+    "arrow-parens": ["ban-single-arg-parens"],
+    "no-console": false,
+    "object-literal-sort-keys": false
   },
   "plugins": [
     "react-native"

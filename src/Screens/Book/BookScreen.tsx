@@ -7,27 +7,25 @@ import {
   FlatList,
 } from 'react-native';
 import {
-  BookPresenterInput,
-  } from './BookPresenterInput';
-import { Actions } from '../../Presenter/connect';
+  IBookPresenterInput,
+  } from './IBookPresenterInput';
+import { IActions } from '../../Presenter/connect';
 import { ListItem } from './BookLogItem';
 import { BookPresenterViewModel } from './BookPresenterViewModel';
 import { ProgressViewModel } from './ProgressViewModel';
 import { Navigation } from 'react-native-navigation/lib/dist';
 import { NavigationProps } from 'react-native-navigation';
-import { BookScreenProps } from './bookScreenBuilder';
+import { IBookScreenProps } from './bookScreenBuilder';
 
-type Props = Actions<BookPresenterInput> & BookPresenterViewModel & NavigationProps & BookScreenProps;
+type Props = IActions<IBookPresenterInput> & BookPresenterViewModel & NavigationProps & IBookScreenProps;
 
 export class BookScreen extends Component<Props> {
-  keyExtractor = (item: ProgressViewModel) => item.dayAndDate;
-
-  componentWillMount() {
+  public componentWillMount() {
     Navigation.setOptions(this.props.componentId, {
       topBar: {
         hidden: false,
-        title: this.props.book.name,
         largeTitle: true,
+        title: this.props.book.name,
       },
     });
 
@@ -35,10 +33,11 @@ export class BookScreen extends Component<Props> {
     this.props.actions.start({
       name: '',
       progress: [],
+      total: 0,
     });
   }
 
-  render() {
+  public render() {
     console.log('BookScreen render, props: ', this.props);
     return (
       <View style={styles.container}>
@@ -60,13 +59,15 @@ export class BookScreen extends Component<Props> {
       </View>
     );
   }
+
+  private keyExtractor = (item: ProgressViewModel) => item.dayAndDate;
 }
 
-type ResultProps = {
+interface IResultProps {
   title: string;
   value: string;
-};
-const ResultText = (props: ResultProps) => (
+}
+const ResultText = (props: IResultProps) => (
   <View style={styles.resultContainer}>
     <Text>{props.title}</Text>
     <Text style={styles.resultValueText}>{props.value}</Text>
@@ -75,21 +76,21 @@ const ResultText = (props: ResultProps) => (
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'stretch',
   },
-  listContainer: {
-    flex: 1,
-    backgroundColor: 'lightgray',
+  footerContainer: {
+    alignSelf: 'stretch',
+    marginBottom: 24,
+    marginHorizontal: 16,
   },
   list: {
     flex: 1,
   },
-  footerContainer: {
-    marginHorizontal: 16,
-    marginBottom: 24,
-    alignSelf: 'stretch',
+  listContainer: {
+    backgroundColor: 'lightgray',
+    flex: 1,
   },
   resultContainer: {
     flexDirection: 'row',

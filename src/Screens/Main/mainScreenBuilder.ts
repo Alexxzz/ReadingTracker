@@ -1,25 +1,21 @@
 import { MainScreen } from './MainScreen';
 import { connect } from '../../Presenter/connect';
-import { MainPresenter } from './MainPresenter';
-import { AsyncStorageGateway } from '../../Services/AsyncStorageGateway';
-import { AsyncStorage } from 'react-native';
-import { MainPresenterInput } from './MainPresenterInput';
-import { MainPresenterViewModel } from './MainPresenterViewModel';
-import { ReactNativeNavigationService } from '../../Services/ReactNativeNavigationService';
-import { NavigationProps, Navigation } from 'react-native-navigation';
+import { IMainPresenterInput } from './IMainPresenterInput';
+import { IMainPresenterViewModel } from './IMainPresenterViewModel';
+import { NavigationProps } from 'react-native-navigation';
+import { container } from '../../inversify.config';
+import { TYPES } from '../../Services/Types';
+import { Presenter } from '../../Presenter/Presenter';
 
-const presenter = new MainPresenter(
-  new AsyncStorageGateway(AsyncStorage),
-  new ReactNativeNavigationService(Navigation),
-);
+const mainPresenter = container.get<Presenter<IMainPresenterViewModel>>(TYPES.MainPresenter);
 
-const initialState: MainPresenterViewModel = {
+const mainPresenterInitialState: IMainPresenterViewModel = {
   books: [],
 };
 
 export const MainScreenConnected = connect<
-  MainPresenter,
-  MainPresenterInput,
-  MainPresenterViewModel,
+  Presenter<IMainPresenterViewModel>,
+  IMainPresenterInput,
+  IMainPresenterViewModel,
   NavigationProps
->(presenter, initialState, MainScreen);
+>(mainPresenter, mainPresenterInitialState, MainScreen);

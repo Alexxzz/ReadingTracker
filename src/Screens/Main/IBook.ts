@@ -1,11 +1,13 @@
 import { Progress } from '../Book/Progress';
 
-export type Book = {
+export interface IBook {
   name: string;
   progress: Progress[];
-};
+  total: number;
+}
 
-export const NullBook: Book = {
+export const NullBook: IBook = {
   name: '',
   progress: [],
+  total: 0,
 };

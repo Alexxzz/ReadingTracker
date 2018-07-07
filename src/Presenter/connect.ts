@@ -1,21 +1,21 @@
 import React, { Component, ComponentType } from 'react';
 import { ComponentProvider } from 'react-native';
-import { actionsKey, Presenter, PresenterOutput } from './Presenter';
+import { actionsKey, Presenter, IPresenterOutput } from './Presenter';
 
-export interface Actions<T> {
+export interface IActions<T> {
   actions: T;
 }
 
 export const connect = <P extends Presenter<VM>, I, VM, C = {}>
 (presenter: P,
  initialState: VM,
- component: ComponentType<Actions<I> & VM & C>,
- mapPresenterToActions?: (presenter: P) => Actions<I>,
+ component: ComponentType<IActions<I> & VM & C>,
+ mapPresenterToActions?: (presenter: P) => IActions<I>,
 ): ComponentProvider => {
-  class PresenterProvider extends Component implements PresenterOutput<VM> {
-    private readonly presenter: P;
+  class PresenterProvider extends Component implements IPresenterOutput<VM> {
+    public state: VM = initialState;
 
-    state: VM = initialState;
+    private readonly presenter: P;
 
     constructor(props: any) {
       super(props);
@@ -24,11 +24,11 @@ export const connect = <P extends Presenter<VM>, I, VM, C = {}>
       presenter.setOutput(this);
     }
 
-    renderOutput(viewModel: Partial<VM>): void {
+    public renderOutput(viewModel: Partial<VM>): void {
       this.setState(viewModel);
     }
 
-    render() {
+    public render() {
       const actions = mapPresenterToActions ?
         mapPresenterToActions(this.presenter) : autoMapPresenterToActions(this.presenter);
       const props = { ...actions, ...this.state as any, ...this.props };
@@ -39,8 +39,8 @@ export const connect = <P extends Presenter<VM>, I, VM, C = {}>
   return () => PresenterProvider;
 };
 
-const autoMapPresenterToActions = <P, A>(presenter: P): Actions<A> => {
-  const map: Actions<any> = { actions: {} };
+const autoMapPresenterToActions = <P, A>(presenter: P): IActions<A> => {
+  const map: IActions<any> = { actions: {} };
 
   const actionsKeys = (presenter as any)[actionsKey];
   if (actionsKeys) {

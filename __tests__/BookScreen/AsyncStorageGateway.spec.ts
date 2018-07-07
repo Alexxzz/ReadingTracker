@@ -1,21 +1,22 @@
+import 'reflect-metadata';
 import {
   AsyncStorageGateway,
 } from '../../src/Services/AsyncStorageGateway';
 import { AsyncStorage } from 'react-native';
-import { Book } from '../../src/Screens/Main/Book';
+import { IBook } from '../../src/Screens/Main/IBook';
 
 class AsyncStorageStub implements AsyncStorage {
-  setItem = jest.fn();
-  getItem = jest.fn();
+  public setItem = jest.fn();
+  public getItem = jest.fn();
 
-  removeItem = jest.fn();
-  mergeItem = jest.fn();
-  clear = jest.fn();
-  getAllKeys = jest.fn();
-  multiGet = jest.fn();
-  multiSet = jest.fn();
-  multiRemove = jest.fn();
-  multiMerge = jest.fn();
+  public removeItem = jest.fn();
+  public mergeItem = jest.fn();
+  public clear = jest.fn();
+  public getAllKeys = jest.fn();
+  public multiGet = jest.fn();
+  public multiSet = jest.fn();
+  public multiRemove = jest.fn();
+  public multiMerge = jest.fn();
 }
 
 describe('Progress storage', () => {
@@ -37,8 +38,9 @@ describe('Progress storage', () => {
         '{"page":15,"date":"2018-02-14T15:12:14.593Z"}]}]',
       ));
 
-      const book: Book = {
+      const book: IBook = {
         name: 'Book 2',
+        total: 0,
         progress: [
           {
             page: 67,
@@ -71,8 +73,9 @@ describe('Progress storage', () => {
       it('stores first book', async () => {
         const sut = new AsyncStorageGateway(asyncStorageStub);
         asyncStorageStub.getItem.mockReturnValue(Promise.resolve(null));
-        const book: Book = {
+        const book: IBook = {
           name: 'Book 2',
+          total: 0,
           progress: [
             {
               page: 67,

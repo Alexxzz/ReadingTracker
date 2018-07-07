@@ -6,11 +6,11 @@ declare module 'react-native-navigation' {
   };
 
   export declare class NavigationClass {
-    registerComponent(componentName: string, getComponentClassFunc: ComponentProvider): void;
-    setRoot(params: any): Promise<any>;
-    events(): any;
+    public registerComponent(componentName: string, getComponentClassFunc: ComponentProvider): void;
+    public setRoot(params: any): Promise<any>;
+    public events(): any;
 
-    push(componentId: string, layout: any): Promise<any>;
+    public push(componentId: string, layout: any): Promise<any>;
   }
 
   // export default NavigationClass;

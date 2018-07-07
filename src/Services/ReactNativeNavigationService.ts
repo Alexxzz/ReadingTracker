@@ -1,17 +1,29 @@
-import { NavigationService } from './NavigationService';
 import { NavigationClass } from 'react-native-navigation';
-import { Book } from '../Screens/Main/Book';
+import { INavigationService } from './INavigationService';
+import { IBook } from '../Screens/Main/IBook';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './Types';
 
-export class ReactNativeNavigationService implements NavigationService {
-  constructor(private readonly navigator: NavigationClass) { }
+@injectable()
+export class ReactNativeNavigationService implements INavigationService {
+  constructor(@inject(TYPES.Navigator) private readonly navigator: NavigationClass) { }
 
-  showBookScreen(componentId: string, book: Book): void {
+  public showBookScreen(componentId: string, book: IBook): void {
     this.navigator.push(componentId, {
       component: {
         name: 'BookScreen',
         passProps: {
           book,
         },
+      },
+    }).then(a => console.log('Navigation.push next: ', a))
+      .catch(e => console.log('Navigation.push e:', e));
+  }
+
+  public showNewBookScreen(): void {
+    this.navigator.push('', {
+      component: {
+        name: 'BookScreen',
       },
     }).then(a => console.log('Navigation.push next: ', a))
       .catch(e => console.log('Navigation.push e:', e));

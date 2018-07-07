@@ -10,18 +10,44 @@ import {
   ListRenderItemInfo,
   TouchableHighlight,
 } from 'react-native';
-import { Actions } from '../../Presenter/connect';
-import { MainPresenterViewModel } from './MainPresenterViewModel';
-import { MainPresenterInput } from './MainPresenterInput';
-import { BookViewModel } from './BookViewModel';
+import { IActions } from '../../Presenter/connect';
+import { IMainPresenterViewModel } from './IMainPresenterViewModel';
+import { IMainPresenterInput } from './IMainPresenterInput';
+import { IBookViewModel } from './IBookViewModel';
 import { NavigationProps } from 'react-native-navigation';
 
-type Props = NavigationProps & Actions<MainPresenterInput> & MainPresenterViewModel;
+type Props = NavigationProps & IActions<IMainPresenterInput> & IMainPresenterViewModel;
 
 export class MainScreen extends Component<Props> {
+  public async componentWillMount() {
+    await this.props.actions.start();
+  }
+
+  public render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Reading List</Text>
+        </View>
+
+        <View style={styles.listContainer}>
+          <FlatList
+            data={this.props.books}
+            renderItem={this.renderItemCell}
+            keyExtractor={this.keyExtractor}
+          />
+        </View>
+
+        <View style={styles.addBookContainer}>
+          <Button title={'Add book'} onPress={this.addBook}/>
+        </View>
+      </View>
+    );
+  }
+
   private keyExtractor = (item: number, index: number) => String(item + index);
 
-  private renderItemCell = (info: ListRenderItemInfo<BookViewModel>) => (
+  private renderItemCell = (info: ListRenderItemInfo<IBookViewModel>) => (
     <TouchableHighlight
       underlayColor={'#e7e7e7'}
       onPress={() => this.props.actions.selectBookAtIndex(info.index, this.props.componentId)}
@@ -40,31 +66,7 @@ export class MainScreen extends Component<Props> {
     </TouchableHighlight>
   )
 
-  componentWillMount() {
-    this.props.actions.start();
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Reading List</Text>
-        </View>
-
-        <View style={styles.listContainer}>
-          <FlatList
-            data={this.props.books}
-            renderItem={this.renderItemCell}
-            keyExtractor={this.keyExtractor}
-          />
-        </View>
-
-        <View style={styles.addBookContainer}>
-          <Button title={'Add book'} onPress={() => this.props.actions.addBook('test')}/>
-        </View>
-      </View>
-    );
-  }
+  private addBook = async () => await this.props.actions.addBook();
 }
 
 const view = (viewStyle: ViewStyle) => viewStyle;
